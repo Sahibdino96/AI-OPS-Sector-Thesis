@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FeatureBox AI — Deal Note</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@400;500&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f5f0;
+  --ink: #111;
+  --muted: #777;
+  --border: rgba(0,0,0,0.1);
+  --accent: #0f3460;
+  --red: #c0392b;
+  --green: #1a6b3a;
+  --card: #fff;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Geist', sans-serif;
+  font-weight: 300;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem;
+}
+
+/* TOP BAR */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  opacity: 0;
+  animation: up 0.5s ease 0.05s forwards;
+}
+
+.topbar-label {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.topbar-date {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+/* HERO */
+.hero {
+  margin-bottom: 3rem;
+  opacity: 0;
+  animation: up 0.5s ease 0.1s forwards;
+}
+
+.company-name {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+
+.company-name span { color: var(--accent); font-style: italic; }
+
+.one-liner {
+  font-size: 16px;
+  color: var(--muted);
+  max-width: 500px;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  background: var(--card);
+}
+
+.tag.live {
+  border-color: var(--green);
+  color: var(--green);
+  background: #f0faf4;
+}
+
+/* DIVIDER */
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2.5rem 0;
+}
+
+/* SECTION LABEL */
+.section-label {
+  font-family: 'Geist Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* TRACTION */
+.traction-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  opacity: 0;
+  animation: up 0.5s ease 0.2s forwards;
+}
+
+.traction-cell {
+  background: var(--card);
+  padding: 1.5rem 1.25rem;
+  cursor: default;
+  position: relative;
+  transition: background 0.15s;
+}
+
+.traction-cell:hover { background: var(--bg); }
+
+.traction-num {
+  font-family: 'Instrument Serif', serif;
+  font-size: 2.8rem;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+
+.traction-label {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.traction-tooltip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  background: var(--ink);
+  color: #fff;
+  font-size: 11px;
+  line-height: 1.5;
+  padding: 0.6rem 0.875rem;
+  width: 220px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.traction-cell:hover .traction-tooltip { display: block; }
+
+/* THE THREE Q's */
+.questions-wrap {
+  opacity: 0;
+  animation: up 0.5s ease 0.3s forwards;
+}
+
+.q-tabs {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--border);
+  margin-bottom: 0;
+  background: var(--card);
+}
+
+.q-tab {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  border-right: 1px solid var(--border);
+  transition: all 0.15s;
+  text-align: center;
+  user-select: none;
+}
+
+.q-tab:last-child { border-right: none; }
+
+.q-tab:hover { background: var(--bg); color: var(--ink); }
+
+.q-tab.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.q-panels {
+  border: 1px solid var(--border);
+  border-top: none;
+  background: var(--card);
+}
+
+.q-panel {
+  display: none;
+  padding: 1.75rem;
+}
+
+.q-panel.active { display: block; }
+
+.q-verdict {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.verdict-pill {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  font-weight: 500;
+}
+
+.verdict-pill.pass { background: #e8f5ee; color: var(--green); }
+.verdict-pill.flag { background: #fff8e1; color: #b56f00; }
+.verdict-pill.risk { background: #fdecea; color: var(--red); }
+
+.q-text {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #333;
+}
+
+/* RISKS */
+.risks-wrap {
+  opacity: 0;
+  animation: up 0.5s ease 0.4s forwards;
+}
+
+.risk-item {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: 0.75rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
+  align-items: start;
+}
+
+.risk-item:last-child { border-bottom: none; }
+
+.risk-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #e0a000;
+  margin-top: 6px;
+}
+
+.risk-text { font-size: 13px; line-height: 1.6; color: #444; }
+.risk-text strong { color: var(--ink); font-weight: 500; }
+
+/* SOURCING */
+.sourcing-wrap {
+  opacity: 0;
+  animation: up 0.5s ease 0.5s forwards;
+}
+
+.sourcing-box {
+  background: var(--accent);
+  color: white;
+  padding: 2rem;
+}
+
+.sourcing-box .section-label { color: rgba(255,255,255,0.45); }
+.sourcing-box .section-label::after { background: rgba(255,255,255,0.15); }
+
+.sourcing-text {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.15rem;
+  font-style: italic;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.92);
+}
+
+.sourcing-meta {
+  margin-top: 1rem;
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.08em;
+}
+
+/* FOUNDER STRIP */
+.founder-strip {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  opacity: 0;
+  animation: up 0.5s ease 0.35s forwards;
+}
+
+.founder-initial {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.founder-info { flex: 1; }
+
+.founder-name {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.founder-creds-text {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+
+/* FOOTER */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  opacity: 0;
+  animation: up 0.5s ease 0.6s forwards;
+}
+
+.footer-name {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1rem;
+}
+
+.footer-meta {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.footer-right {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  text-align: right;
+  line-height: 1.6;
+}
+
+@keyframes up {
+  from { opacity:0; transform: translateY(14px); }
+  to { opacity:1; transform: translateY(0); }
+}
+
+@media (max-width: 500px) {
+  .traction-row { grid-template-columns: 1fr 1fr; }
+  .q-tabs { flex-direction: column; }
+  .q-tab { border-right: none; border-bottom: 1px solid var(--border); }
+  .footer { flex-direction: column; gap: 1rem; }
+  .footer-right { text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="topbar-label">Deal Note &nbsp;/&nbsp; Pre-Venture</span>
+  <span class="topbar-date">April 2026</span>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="company-name">Feature<span>Box</span> AI</div>
+  <p class="one-liner">AI-native revenue recovery platform for mid-market CPG brands. Deductions, forecasting, trade analytics — unified data layer, agentic workflows, live in 11 days.</p>
+  <div class="tags">
+    <span class="tag live">Generating Revenue</span>
+    <span class="tag">Pre-Venture · $50K Raised</span>
+    <span class="tag">3 Employees</span>
+    <span class="tag">Berkeley, CA · Founded 2025</span>
+    <span class="tag">LAUNCH Accelerator</span>
+    <span class="tag">Mayfield AI Garage</span>
+  </div>
+</div>
+
+<hr>
+
+<!-- TRACTION -->
+<div class="section-label">Traction</div>
+<div class="traction-row">
+  <div class="traction-cell">
+    <div class="traction-num">$1M+</div>
+    <div class="traction-label">Documented customer savings</div>
+    <div class="traction-tooltip">$700K+ average annual recovery across 20+ brands using just 2 of 4 modules. Compounds as more modules are adopted.</div>
+  </div>
+  <div class="traction-cell">
+    <div class="traction-num">50+</div>
+    <div class="traction-label">CPG brands served</div>
+    <div class="traction-tooltip">50+ brands on the platform within 12 months of founding, with 3 employees and $50K raised. Includes Herb Pharm, Pacific Botanicals, Sienna Sauce.</div>
+  </div>
+  <div class="traction-cell">
+    <div class="traction-num">10x</div>
+    <div class="traction-label">Typical year-one ROI</div>
+    <div class="traction-tooltip">$25K/mo recovered in deductions within 30 days for a ~$40M regional brand. $300K inventory reduction in year one for a $15M supplement brand.</div>
+  </div>
+</div>
+
+<div style="margin-top:1px;background:var(--border);display:grid;grid-template-columns:repeat(3,1fr);gap:1px;">
+  <div style="background:var(--card);padding:0.875rem 1.25rem;position:relative;" class="traction-cell">
+    <div class="traction-num" style="font-size:2rem;">85 hrs</div>
+    <div class="traction-label">Analyst time reclaimed per month</div>
+    <div class="traction-tooltip">Finance and ops teams stop manually pulling deductions, running Excel forecasts, and reconciling trade spend. That time goes back to the business.</div>
+  </div>
+  <div style="background:var(--card);padding:0.875rem 1.25rem;" class="traction-cell">
+    <div class="traction-num" style="font-size:2rem;">11 days</div>
+    <div class="traction-label">Fastest customer go-live</div>
+    <div class="traction-tooltip">Integrates with SAP, NetSuite, Oracle, Walmart Retail Link, Amazon Vendor Central, SPINS, Nielsen. No rip-and-replace — sits on top of existing stack.</div>
+  </div>
+  <div style="background:var(--card);padding:0.875rem 1.25rem;" class="traction-cell">
+    <div class="traction-num" style="font-size:2rem;">4</div>
+    <div class="traction-label">Connected agentic modules</div>
+    <div class="traction-tooltip">Deductions, Demand Forecasting, Trade Analytics, Talk to Your Data — all sharing one unified data layer. Each module makes the others more accurate.</div>
+  </div>
+</div>
+
+<p style="font-size:11px;color:var(--muted);margin-top:0.5rem;font-family:'Geist Mono',monospace;">↑ Hover each metric for context</p>
+
+<hr>
+
+<!-- THREE QUESTIONS -->
+<div class="section-label">The Three Questions</div>
+<div class="questions-wrap">
+  <div class="q-tabs">
+    <div class="q-tab active" onclick="switchQ(0)">Feature vs. Company</div>
+    <div class="q-tab" onclick="switchQ(1)">ERP Acquisition Risk</div>
+    <div class="q-tab" onclick="switchQ(2)">Standalone Scale</div>
+  </div>
+  <div class="q-panels">
+    <div class="q-panel active" id="q0">
+      <div class="q-verdict">
+        <span class="verdict-pill pass">Company</span>
+      </div>
+      <p class="q-text">Four connected modules sharing a unified data layer — not a single-point tool. The architecture creates compounding defensibility: each module makes the others more accurate as more customer data flows through. Single deduction tools exist; none unify deductions, forecasting, trade analytics, and NL data access in one platform built exclusively for CPG. The unified data layer is the moat, not the individual features. Customers that start with one module consistently add more — land-and-expand built into the product architecture.</p>
+    </div>
+    <div class="q-panel" id="q1">
+      <div class="q-verdict">
+        <span class="verdict-pill pass">Low Risk</span>
+      </div>
+      <p class="q-text">FeatureBox sits <em>on top of</em> SAP, NetSuite, and Oracle — it's the intelligence layer, not a competing system. ERPs don't serve mid-market CPG well in this category: too expensive, too slow, too generic. A more likely exit path is strategic acquisition by a CPG data company (SPINS, Nielsen) or a mid-market ERP expanding upmarket — not a kill move. The deeper risk isn't ERP competition, it's major retailers like Walmart restricting portal API access, which would increase integration maintenance costs. Worth monitoring.</p>
+    </div>
+    <div class="q-panel" id="q2">
+      <div class="q-verdict">
+        <span class="verdict-pill pass">Yes</span>
+      </div>
+      <p class="q-text">CPG is a $2T+ industry. Mid-market brands ($10M–$300M revenue) represent tens of thousands of companies in the US alone — every one selling through major retailers deals with deductions and forecasting challenges. $700K+ average annual recovery with only 2 of 4 modules suggests significant NRR expansion potential as adoption deepens. The modular pricing model (scale-based, not per-seat) aligns incentives and grows with the customer. International CPG markets extend the TAM further. The question is go-to-market velocity, not market size.</p>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- FOUNDER -->
+<div class="section-label">Founder</div>
+<div class="founder-strip">
+  <div class="founder-initial">B</div>
+  <div class="founder-info">
+    <div class="founder-name">Bharath Kurapati — Co-Founder & CEO</div>
+    <div class="founder-creds-text">UC Berkeley Haas MBA &nbsp;·&nbsp; Microsoft PM (LLM) &nbsp;·&nbsp; Tesla + CrowdStrike MBA PM &nbsp;·&nbsp; YC Startup School &nbsp;·&nbsp; 2x Founder &nbsp;·&nbsp; NIT Warangal B.Tech</div>
+  </div>
+</div>
+<p style="font-size:13px;color:#555;line-height:1.7;margin-top:0.75rem;">Enterprise product background, not a CPG operator — the one credential gap worth noting. But 50+ paying customers in under a year with a 3-person team suggests customer discovery depth that compensates. The product's specificity (Walmart Retail Link, KeHE portal, SPINS integration) reflects genuine domain knowledge built from the ground up. The next critical hire is a CPG operator co-founder or head of customer success with distribution experience.</p>
+
+<hr>
+
+<!-- RISKS -->
+<div class="section-label">Risks</div>
+<div class="risks-wrap">
+  <div class="risk-item">
+    <div class="risk-dot"></div>
+    <div class="risk-text"><strong>Founder domain gap.</strong> Enterprise product background, not CPG operations. Traction suggests this is being overcome through deep discovery, but a co-founder with brand-side experience would strengthen the thesis.</div>
+  </div>
+  <div class="risk-item">
+    <div class="risk-dot"></div>
+    <div class="risk-text"><strong>Team execution risk at scale.</strong> 3 employees with 50+ customers is impressive efficiency — but the next hires are critical. Support quality and product velocity at scale need to be validated.</div>
+  </div>
+  <div class="risk-item">
+    <div class="risk-dot"></div>
+    <div class="risk-text"><strong>Retailer portal dependency.</strong> Integration with Walmart Retail Link, Amazon Vendor Central, KeHE, UNFI. API access changes or data policy shifts create ongoing maintenance risk.</div>
+  </div>
+</div>
+
+<hr>
+
+<!-- SOURCING -->
+<div class="section-label">Why This, Why Now</div>
+<div class="sourcing-wrap">
+  <div class="sourcing-box">
+    <div class="sourcing-text">Met the founder in person at HumanX 2026 in San Francisco. Pre-venture, $50K raised, 3 people — already generating $1M+ in documented customer savings. Selected to pitch at Mayfield AI Garage. No institutional capital yet. This is exactly the stage where first-check access matters.</div>
+    <div class="sourcing-meta">Sourced at HumanX 2026, SF &nbsp;·&nbsp; PitchBook verified &nbsp;·&nbsp; April 2026</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div>
+    <div class="footer-name">Sahib Dino</div>
+    <div class="footer-meta">MBA '26 · Babson College · sdino1@babson.edu</div>
+  </div>
+  <div class="footer-right">
+    featureboxai.com<br>
+    Bharath Kurapati, CEO
+  </div>
+</div>
+
+<script>
+function switchQ(i) {
+  document.querySelectorAll('.q-tab').forEach((t,idx) => t.classList.toggle('active', idx===i));
+  document.querySelectorAll('.q-panel').forEach((p,idx) => p.classList.toggle('active', idx===i));
+}
+</script>
+</body>
+</html>
